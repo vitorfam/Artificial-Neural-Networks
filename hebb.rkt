@@ -1,41 +1,58 @@
 #lang racket
+;;Hebb rule for tranning neural networks:
+;;Learning occurs by modification of the synapse
+;;strengths (weights).
+;;Increase the weights of neurons that fires
+;;at the same time and the weights of neurons that,
+;;at the same time, do not fire.
+;;We are using bipolar inputs and targets (1 and -1).
 
-(define (delta-w x t w)
-  (if (= (* x t) 1) (+ w 1)
-      (- w 1)))
+(define *theta* 0)
+(define *and-target* '(1 -1 -1 -1))
+(define *or-target* '(-1 1 1 1))
+(define *inputs* '((1 1 -1 -1) (1 -1 1 -1)))
+(define *x-target* '(1))
+(define *x-inputs* '((1) (-1) (-1) (-1) (1) (-1) (1) (-1) (1) (-1) (-1) (-1) (1) (-1) (-1) (-1) (1) (-1) (1) (-1) (1) (-1) (-1) (-1) (1)))
+(define *o-inputs* '((-1) (1) (1) (1) (-1) (1) (-1) (-1) (-1) (1) (1) (-1) (-1) (-1) (1) (1) (-1) (-1) (-1) (1) (-1) (1) (1) (1) (-1)))
 
-(define (bn t b)
-  (if (= (* 1 t) 1) (+ b 1)
+(define (bias_update1 b t)
+  (if (= t 1) (+ b 1)
       (- b 1)))
 
-(define (hebb x1 x2 t w1 w2 b)
-  (cond [(and (null? x1) (null? x2) (null? t)) (list w1 w2 b)]
-        [else (hebb (cdr x1)
-                    (cdr x2)
-                    (cdr t)
-                    (delta-w (car x1) (car t) w1)
-                    (delta-w (car x2) (car t) w2)
-                    (bn (car t) b))]))
+(define (weights_update inputs target weights)
+  (cond [(null? target) weights]
+        [else
+         (weights_update
+          (map (lambda(x) (cdr x)) inputs)
+          (cdr target)
+          (map (lambda(x y) (+ x y))
+              weights
+              (map (lambda(x) (* (car x) (car target))) inputs)))]))
 
-(define (net x1 x2 w1 w2 b)
-  (+ (* w1 x1) (* w2 x2) b))
+(define (bias_update b target)
+  (if (null? target) b
+      (bias_update (bias_update1 b (car target)) (cdr target))))
 
-(define (fnet x1 x2 w1 w2 b teta)
-  (if (>= (net x1 x2 w1 w2 b) teta) 1
+(define (hebb_training inputs target weights b)
+  (flatten (list (weights_update inputs target weights)
+        (bias_update b target))))
+
+;;The neuron:
+(define (net inputs weights b)
+  (+ b (apply + (map (lambda(x y) (* x y)) (map (lambda(x) (car x)) inputs) weights))))
+
+(define (f_net inputs weights b)
+  (if (>= (net inputs weights b) *theta*) 1
       -1))
 
-(define (nn l1 l2 ws teta)
-  (let loop [(w1 (car ws))
-             (w2 (cadr ws))
-             (b (caddr ws))
-             (x1 l1)
-             (x2 l2)
-             (y '())]
-    (cond [(and (null? x1) (null? x2)) (reverse y)]
-          [else (loop w1 w2 b (cdr x1) (cdr x2)
-                      (cons (fnet (car x1)
-                                  (car x2)
-                                  w1
-                                  w2
-                                  b
-                                  teta) y))])))
+(define (neural-network inputs hebb_data)
+  (let loop [(x inputs)
+             (b (last hebb_data))
+             (weights (reverse (cdr (reverse hebb_data))))
+             (res '())]
+    (if (null? (car x)) (reverse res)
+    (loop
+     (map (lambda(s) (cdr s)) x)
+     b
+     weights
+     (cons (f_net x weights b) res)))))
