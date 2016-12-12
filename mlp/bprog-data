@@ -36,3 +36,12 @@
 (define t-pairs (make-pair-list x1 x2))
 (define targets '(-1 1 1 -1))
 (define lr 0.02)
+
+;;;Random v-weights:
+(define rvij (for/list [(y (in-range 4))]
+    (for/list [(x (in-range 2))]
+      (* 0.5 (random)))))
+
+;;Random w-weights:
+(define rwjk (for/list [(y (in-range 4))]
+      (* 0.5 (random))))

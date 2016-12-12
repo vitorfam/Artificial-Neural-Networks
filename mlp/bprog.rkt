@@ -2,6 +2,7 @@
 
 (include "bprog-data")
 
+
 (define (bipolar-sigmoid x)
   (- (/ 2 (+ 1 (exp (* -1 x)))) 1))
 
@@ -9,6 +10,7 @@
   (* 0.5
      (+ 1 (bipolar-sigmoid x))
      (- 1 (bipolar-sigmoid x))))
+
 
 ;;Transforma a lista de pesos vij em uma lista só:
 (define (multi->one ls)
@@ -149,6 +151,10 @@
 (define (v0jnew* v0jold Dv0j)
   (map (lambda(x y) (+ x y)) v0jold Dv0j))
 
+;;Erro quadrático:
+(define (eq ti yi)
+  (* 0.5 (expt (- ti yi) 2)))
+
 (define (cicle VIJ V0J WJK W0K)
   (let loop [(xi t-pairs)
              (tk targets)
@@ -177,12 +183,20 @@
                       (caddr  (cicle Vij V0j Wjk W0k))
                       (cadddr (cicle Vij V0j Wjk W0k)))])))
 
+
 ;;Depois do treinamento:
 (define train-data (treinar 1000 vij v0j wjk w0k))
+(define train-rdata (treinar 1000 rvij v0j rwjk w0k))
+
 (define tvij (car train-data))
 (define tv0j (cadr train-data))
 (define twjk (caddr train-data))
 (define tw0k (cadddr train-data))
+
+(define rtvij (car train-rdata))
+(define rtv0j (cadr train-rdata))
+(define rtwjk (caddr train-rdata))
+(define rtw0k (cadddr train-rdata))
 
 (define (t-z_inj v0j-t xi vij-t)
   (+ v0j-t (apply + (map (lambda(x y) (* x y)) xi vij-t))))
@@ -198,5 +212,6 @@
 
 (define (teste inputs)
   (map (lambda(r) (resposta (yk (y_ink tw0k (t-zj* (z_inj* tv0j r tvij)) twjk)))) inputs))
-  
-(teste t-pairs)
+
+(define (rteste inputs)
+  (map (lambda(r) (resposta (yk (y_ink rtw0k (t-zj* (z_inj* rtv0j r rtvij)) rtwjk)))) inputs))
