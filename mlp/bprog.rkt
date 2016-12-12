@@ -198,3 +198,5 @@
 
 (define (teste inputs)
   (map (lambda(r) (resposta (yk (y_ink tw0k (t-zj* (z_inj* tv0j r tvij)) twjk)))) inputs))
+  
+(teste t-pairs)
