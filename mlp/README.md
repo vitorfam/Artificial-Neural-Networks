@@ -1,0 +1,2 @@
+Usage:
+> (teste t-pairs)
