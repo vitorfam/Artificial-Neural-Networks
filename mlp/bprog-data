@@ -1,0 +1,38 @@
+(define (make-pair-list l1 l2)
+  (map (lambda(x y) (list x y)) l1 l2))
+
+;;v_{0j}
+(define v01 -0.3378)
+(define v02 0.2771)
+(define v03 0.2859)
+(define v04 -0.3329)
+(define v0j (list v01 v02 v03 v04))
+
+;;v_{ij}
+(define v11 0.1970)
+(define v12 0.3191)
+(define v13 -0.1448)
+(define v14 0.3594)
+
+(define v21 0.3099)
+(define v22 0.1904)
+(define v23 -0.0347)
+(define v24 -0.4861)
+(define vij-aux (list v11 v12 v13 v14 v21 v22 v23 v24))
+(define vi1 (list v11 v12 v13 v14))
+(define vi2 (list v21 v22 v23 v24))
+(define vij (make-pair-list vi1 vi2))
+
+;;w_{jk}
+(define w0k -0.1401)
+(define w11 0.4919)
+(define w21 -0.2913)
+(define w31 -0.3979)
+(define w41 0.3581)
+(define wjk (list w11 w21 w31 w41))
+
+(define x1 '(1 1 -1 -1))
+(define x2 '(1 -1 1 -1))
+(define t-pairs (make-pair-list x1 x2))
+(define targets '(-1 1 1 -1))
+(define lr 0.02)
