@@ -1,5 +1,5 @@
 # Artificial-Neural-Networks
-Artificial Neural Networks Algorithims in Scheme and Common Lisp
+Artificial Neural Networks Algorithims in Scheme and Common Lisp, following the book Fundamentals Of Neural Networks - Architecture, Algorithms and Applications, by Laurene Fausett.
 
 ## Racket programs:
 - McCulloch-Pitts neuron;
