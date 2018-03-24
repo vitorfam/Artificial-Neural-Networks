@@ -24,16 +24,18 @@ function newWeight (wOld, input, target){
 function weightsUpdate (input, targets, weights) {
     if (input.length == 0) {
         return weights;
+        
     } else {
         let weightNew = new Array();
         let inputPair = input[0];
-        let t = target[0];
+        let t = targets[0];
         for(i=0;i<weights.length;i++){
             weightNew[i] = newWeight(weights[i], inputPair[i], t);
         }
         console.log(weightNew);
         
-        weightsUpdate(input.slice(1), target.slice(1), weightNew);
+        
+        weightsUpdate(input.slice(1), targets.slice(1), weightNew);
     }
 }
 
@@ -49,6 +51,5 @@ var inputs = [
 var target = [1, -1, -1, -1];
 
 var weights = [0, 0];
-
 weightsUpdate(inputs, target, weights);
-// biasUpdate(bias, target);
+biasUpdate(bias, target);
