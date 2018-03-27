@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Hebb Neural Network</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="hebb.js"></script>
+    <script>
+        var pesos = [];
+        var b = 0;
+        function string2array(str) {
+            return str.split(',').map(Number);
+        }
+        function pairOfinputs(input1, input2, inputs) {
+            if (input1.length == 0) {
+                return inputs;
+                //console.log(inputs);               
+            } else {
+                inputs.push([input1[0], input2[0]]);
+                return pairOfinputs(input1.slice(1), input2.slice(1), inputs);
+            }
+        }
+
+        $(document).ready(function () {
+            $('#train').click(function () {
+                let inp1text = $('#trainInp1').val();
+                let inp1 = string2array(inp1text);
+                let inp2text = $('#trainInp2').val();
+                let inp2 = string2array(inp2text);
+                let inputs = pairOfinputs(inp1, inp2, []);
+                let bias = parseInt($('#trainBias').val());
+                let target = string2array($('#trainTarget').val());
+                let weights = parseInt($('#trainWeight').val());
+                console.log({
+                    'inputs': inputs,
+                    'bias': bias,
+                    'target': target,
+                    'weights': weights
+                });
+                let newBias = biasUpdate(bias, target);
+                console.log(newBias);
+                $('#bias').html(newBias);
+                b = newBias;
+                let newWeights = weightsUpdate(inputs, target, [weights, weights]);
+                console.log(newWeights);
+                $('#w1').html(newWeights[0]);
+                $('#w2').html(newWeights[1]);
+                pesos = [newWeights[0], newWeights[1]];
+            })
+        });
+        $(document).ready(function () {
+            $('#copy').click(function () {
+                $('#netInp1').val($('#trainInp1').val());
+                $('#netInp2').val($('#trainInp2').val());
+                $('#netBias').val(b);
+                $('#netW1').val(pesos[0]);
+                $('#netW2').val(pesos[1]);
+                // Colocar o bias e weight tb. Fazer como variáveis globais.
+            });
+        });
+
+        $(document).ready(function () {
+            $('#net').click(function () {
+                let inp1text = $('#netInp1').val();
+                let inp1 = string2array(inp1text);
+                let inp2text = $('#netInp2').val();
+                let inp2 = string2array(inp2text);
+                let inputs = pairOfinputs(inp1, inp2, []);
+                let bias = parseInt($('#netBias').val());
+                let w1 = parseInt($('#netW1').val());
+                let w2 = parseInt($('#netW2').val());
+                weights = [w1, w2];
+                console.log({
+                    'inputs': inputs,
+                    'bias': bias,
+                    'weights': weights
+                });
+                var res = [];
+                for (var n = 0; n < inputs.length; n++) {
+                    // console.log(f_net(bias + inputs[n].reduce(function (r, a, i) {
+                    //     return r + a * weights[i]
+                    // }, 0)));
+                    res[n] = f_net(bias + inputs[n].reduce(function (r, a, i) {
+                        return r + a * weights[i]
+                    }, 0));
+                }
+                $('#res').html(res.join(', '));
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+        <h1>Artificial Neural Network - Hebb Training</h1>
+        <p>The Hebb's algorithim in Javascript</p>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3>Train Data</h3>
+                <p>Input 1:
+                    <input type="text" id="trainInp1" placeholder="Ex: 1,-1,1,-1">
+                </p>
+                <p>Input 2:
+                    <input type="text" id="trainInp2" placeholder="Ex: 1,-1,1,-1">
+                </p>
+                <p>Target:
+                    <input type="text" id="trainTarget" placeholder="Ex: 1,-1,1,-1">
+                </p>
+                <p>Initial Bias:
+                    <input type="number" id="trainBias" style="width:10%">
+                </p>
+                <p>Initial Weight:
+                    <input type="number" id="trainWeight" style="width:10%">
+                </p>
+                <button type="button" id="train" class="btn btn-primary">Train</button>
+                <hr>
+                <p>W1:
+                    <span id="w1"></span>
+                </p>
+                <p>W2:
+                    <span id="w2"></span>
+                </p>
+                <p>Bias:
+                    <span id="bias"></span>
+                </p>
+            </div>
+            <div class="col">
+                <h3>Neural Network</h3>
+                <p>Input 1:
+                    <input type="text" id="netInp1" placeholder="Ex: 1,-1,1,-1">
+                </p>
+                <p>Input 2:
+                    <input type="text" id="netInp2" placeholder="Ex: 1,-1,1,-1">
+                </p>
+                <p>Bias:
+                    <input type="number" id="netBias" style="width:10%">
+                </p>
+                <p>Weight W1:
+                    <input type="number" id="netW1" style="width:10%">
+                </p>
+                <p>Weight W2:
+                    <input type="number" id="netW2" style="width:10%">
+                </p>
+                <button type="button" id="copy" class="btn btn-primary">Inputs from Train</button>
+
+                <button type="button" id="net" class="btn btn-primary">Run</button>
+                <hr>
+                <p>Result:
+                    <span id="res"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

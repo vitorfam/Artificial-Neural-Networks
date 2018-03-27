@@ -7,11 +7,9 @@
 (define *theta* 0)
 ;;(define *inputs* '((1 1 1 1) (-1 1 -1 -1) (1 1 1 -1) (1 -1 -1 1)))
 ;;(define *target* '(1 -1 -1 -1))
-;;1 -1 -1 -1 1
-;;-1 1 -1 1 -1
-;;-1 -1 1 -1 -1
-;;-1 1 -1 1 -1
-;;1 -1 -1 -1 1
+
+(define *inputs* '((-1 -1 1 1) (-1 1 -1 1)))
+(define *target* '(-1 -1 -1 1))
 
 (define (net inputs weights b)
   (+ b (apply + (map (lambda(x y) (* x y))
