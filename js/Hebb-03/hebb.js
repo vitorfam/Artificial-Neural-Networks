@@ -72,3 +72,21 @@ function f_net(net) {
 //         return r + a * weights[i]
 //     }, 0)));
 // }
+
+var x = [
+    [1, -1, -1, -1, 1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, 1, -1, 1, -1,
+        1, -1, -1, -1, 1
+    ]
+];
+
+var t = [1];
+
+b = biasUpdate(1, t);
+w = weightsUpdate(x, t, [0]);
+console.log(w);
+
+for (var n = 0; n < x.length; n++) {
+    console.log(f_net(b + x.reduce(function (r, a, i) {
+        return r + a * w
+    }, 0)));
+}
