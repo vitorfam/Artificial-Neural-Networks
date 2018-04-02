@@ -55,18 +55,21 @@ var t = [1, 1, 1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1,
 var w = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var inputs = [s, t];
 var alpha = 0.3;
+
 w = weightUptade(w, 0.5, target, inputs);
 
 // for (var i = 0; i < inputs.length; i++) {
-//     return 1 + inputs[i].map(function (x, index) {
+//     console.log(1 + inputs[i].map(function (x, index) {
 //         return x * w[index]
 //     }).reduce(function (vOld, vNew) {
 //         return vOld + vNew
-//     }, 0);
+//     }, 0));
 // }
-var c = y_in(1, inputs, w);
-console.log(c);
-
+console.log(1 + inputs[1].map(function (x, index) {
+    return x * w[index]
+}).reduce(function (vOld, vNew) {
+    return vOld + vNew
+}, 0));
 // train(inputs, w, 1, target, 0.3);
 
 // var w1 = w.map(function (wi, index) {
