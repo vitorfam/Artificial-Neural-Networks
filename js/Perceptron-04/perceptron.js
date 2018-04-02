@@ -1,10 +1,12 @@
 function y_in(b, inputs, weights) {
-    for(var i = 0; i < inputs.length; i++ ){ 
-        inputs[i].map(function (x, index) {
-             return x * w[index] 
-            }).reduce(function (vOld, vNew) { 
-                return vOld + vNew },0); 
-            }
+    return
+    for (var i = 0; i < inputs.length; i++) {
+        b + inputs[i].map(function (x, index) {
+            return x * weights[index]
+        }).reduce(function (vOld, vNew) {
+            return vOld + vNew
+        }, 0);
+    }
 }
 
 function activationFunc(y_in) {
@@ -29,7 +31,8 @@ function weightUptade(weights, alpha, targets, inputs) {
             return wi + (alpha * target[i] * input[x]);
         });
     }
-    console.log(w);
+    // console.log(w);
+    return w;
 }
 
 function train(inputs, weights, bias, target, alpha) {
@@ -37,10 +40,10 @@ function train(inputs, weights, bias, target, alpha) {
     let y = activationFunc(yIn);
 
     if (y == target[0]) {
-        console.log(weights);
+        // console.log(weights);
         return weights;
     } else {
-        console.log(weights);
+        // console.log(weights);
         weights = weightUptade(weights, alpha, target, inputs);
         return train(inputs, weights, bias, target, alpha);
     }
@@ -53,7 +56,17 @@ var w = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 var inputs = [s, t];
 var alpha = 0.3;
 w = weightUptade(w, 0.5, target, inputs);
-y_in(1, inputs, w);
+
+// for (var i = 0; i < inputs.length; i++) {
+//     return 1 + inputs[i].map(function (x, index) {
+//         return x * w[index]
+//     }).reduce(function (vOld, vNew) {
+//         return vOld + vNew
+//     }, 0);
+// }
+var c = y_in(1, inputs, w);
+console.log(c);
+
 // train(inputs, w, 1, target, 0.3);
 
 // var w1 = w.map(function (wi, index) {
