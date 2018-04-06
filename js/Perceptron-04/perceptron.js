@@ -54,7 +54,7 @@ var inputs = [
     [-1, 1],
     [-1, -1]
 ];
-var alpha = 1;
+var alpha = 0.2;
 var bias = 0;
 var w = [0, 0];
 
@@ -62,6 +62,10 @@ var w = [0, 0];
 function round(target, inputs, alpha, bias, weights) {
     if (inputs.length == 0) {
         console.log("Fim");
+        return {
+            "w": weights,
+            "bias": bias
+        };
     } else {
         var net = y_in(bias, inputs[0], weights);
         var y = activationFunc(net);
@@ -124,4 +128,9 @@ function round(target, inputs, alpha, bias, weights) {
 // var out5 = {"y_in" : net5, "y" : y5, "w" : w5, "bias" : b5};
 // console.log(out5);
 
-round(target, inputs, alpha, bias, w);
+var r = round(target, inputs, alpha, bias, w);
+console.log(r);
+
+var t1 = y_in(r.bias, [-1,-1], r.w);
+var t2 = activationFunc(t1);
+console.log(t2);
