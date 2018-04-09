@@ -1,24 +1,29 @@
 function y_in(bias, input, weights) {
-    return bias + input.map(function (x, index) {
-        return x * weights[index]
-    }).reduce(function (vOld, vNew) {
-        return vOld + vNew
-    }, 0);
+  return (
+    bias +
+    input
+      .map(function(x, index) {
+        return x * weights[index];
+      })
+      .reduce(function(vOld, vNew) {
+        return vOld + vNew;
+      }, 0)
+  );
 }
 
 var net = y_in(0, [1, 1], [0, 0]);
 // console.log(net);s
 
 function activationFunc(y_in) {
-    let theta = 0.2;
-    if (y_in > theta) {
-        return 1;
-    }
-    if (y_in < -theta) {
-        return -1;
-    } else {
-        return 0;
-    }
+  let theta = 0.2;
+  if (y_in > theta) {
+    return 1;
+  }
+  if (y_in < -theta) {
+    return -1;
+  } else {
+    return 0;
+  }
 }
 var y = activationFunc(net);
 // console.log(y);
@@ -26,15 +31,15 @@ var y = activationFunc(net);
 //Alpha is the learning rate.
 
 function weightUptade(weights, alpha, target, inputs) {
-    var w = [];
-    w = weights.map(function (wi, x) {
-        return wi + (alpha * target * inputs[x]);
-    });
-    return w;
+  var w = [];
+  w = weights.map(function(wi, x) {
+    return wi + alpha * target * inputs[x];
+  });
+  return w;
 }
 
 function biasUpdate(bias, alpha, target) {
-    return bias + alpha * target;
+  return bias + alpha * target;
 }
 
 var nw = weightUptade([0, 0], 1, 1, [1, 1]);
@@ -48,39 +53,34 @@ var nw = weightUptade([0, 0], 1, 1, [1, 1]);
 // var alpha = 1;
 
 var target = [1, -1, -1, -1];
-var inputs = [
-    [1, 1],
-    [1, -1],
-    [-1, 1],
-    [-1, -1]
-];
+var inputs = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
 var alpha = 0.2;
 var bias = 0;
 var w = [0, 0];
 
 //Uma rodada de treinamento:
 function round(target, inputs, alpha, bias, weights) {
-    if (inputs.length == 0) {
-        console.log("Fim");
-        return {
-            "w": weights,
-            "bias": bias
-        };
-    } else {
-        var net = y_in(bias, inputs[0], weights);
-        var y = activationFunc(net);
-        var w = weightUptade(weights, alpha, target[0], inputs[0]);
-        var b = biasUpdate(bias, alpha, target[0])
-        var out = {
-            "y_in": net,
-            "y": y,
-            "t": target[0],
-            "w": w,
-            "bias": b
-        };
-        console.log(out);
-        return round(target.slice(1), inputs.slice(1), alpha, b, w);
-    }
+  if (inputs.length == 0) {
+    console.log("Fim");
+    return {
+      w: weights,
+      bias: bias
+    };
+  } else {
+    var net = y_in(bias, inputs[0], weights);
+    var y = activationFunc(net);
+    var w = weightUptade(weights, alpha, target[0], inputs[0]);
+    var b = biasUpdate(bias, alpha, target[0]);
+    var out = {
+      y_in: net,
+      y: y,
+      t: target[0],
+      w: w,
+      bias: b
+    };
+    console.log(out);
+    return round(target.slice(1), inputs.slice(1), alpha, b, w);
+  }
 }
 
 // var net1 = y_in(bias, inputs[0], w);
@@ -128,9 +128,9 @@ function round(target, inputs, alpha, bias, weights) {
 // var out5 = {"y_in" : net5, "y" : y5, "w" : w5, "bias" : b5};
 // console.log(out5);
 
-var r = round(target, inputs, alpha, bias, w);
-console.log(r);
+// var r = round(target, inputs, alpha, bias, w);
+// console.log(r);
 
-var t1 = y_in(r.bias, [-1,-1], r.w);
-var t2 = activationFunc(t1);
-console.log(t2);
+// var t1 = y_in(r.bias, [-1,-1], r.w);
+// var t2 = activationFunc(t1);
+// console.log(t2);
