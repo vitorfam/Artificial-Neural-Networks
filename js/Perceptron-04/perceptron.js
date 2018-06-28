@@ -48,11 +48,20 @@ var inputs = [
     [0, 0]
 ];
 
-
+// Learning rate is set to 1.
 var alpha = 1;
+
+// Bias is initialized with 0.
 var bias = 0;
+
+// Weights are initialized with 0.
+// If the input has N element, you must initilize N weights.
 var w = [0, 0];
+
+// Weight change counter.
 var wChange = 0;
+
+// Training epochs counter.
 var epoch = 0;
 
 while (wChange != 4) {
