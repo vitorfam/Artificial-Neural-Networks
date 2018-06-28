@@ -41,22 +41,35 @@ function biasUpdate(bias, alpha, target) {
 // Target for OR, uncomment the following line to train for this problem.
 // var target = [1, 1, 1, -1];
 
+var target = [-1, 1, 1, 1, 1, 1, 1, 1];
+
+// var inputs = [
+//     [1, 1],
+//     [1, 0],
+//     [0, 1],
+//     [0, 0]
+// ];
+
 var inputs = [
-    [1, 1],
-    [1, 0],
-    [0, 1],
-    [0, 0]
+    [0, 0, 0],
+    [0, 0, 1],
+    [0, 1, 0],
+    [0, 1, 1],
+    [1, 0, 0],
+    [1, 0, 1],
+    [1, 1, 0],
+    [1, 1, 1]
 ];
 
 // Learning rate is set to 1.
-var alpha = 1;
+var alpha = 0.5;
 
 // Bias is initialized with 0.
 var bias = 0;
 
 // Weights are initialized with 0.
 // If the input has N element, you must initilize N weights.
-var w = [0, 0];
+var w = [0, 0, 0];
 
 // Weight change counter.
 var wChange = 0;
@@ -64,7 +77,7 @@ var wChange = 0;
 // Training epochs counter.
 var epoch = 0;
 
-while (wChange != 4) {
+while (wChange != inputs.length) {
     for (var i = 0; i < inputs.length; i++) {
         console.log('-----------------' + i);
         if (activationFunc(y_in(bias, inputs[i], w)) != target[i]) {
@@ -81,11 +94,12 @@ while (wChange != 4) {
             console.log('Não atualizou o peso.');
         }
     }
-    if (wChange != 4) {
+    if (wChange != inputs.length) {
         wChange = 0;
     }
     epoch++;
 }
+
 console.log('-------FIM-------');
 
 console.log('Pesos ao final do treinamento: [' + w + ']');
@@ -99,6 +113,6 @@ function neuron(inputs, weights, bias) {
     });
 }
 
-console.log('=====================================');
+console.log('========================================');
 
 neuron(inputs, w, bias);
