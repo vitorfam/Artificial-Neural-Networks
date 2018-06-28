@@ -35,32 +35,23 @@ function biasUpdate(bias, alpha, target) {
     return bias + alpha * target;
 }
 
-// w 0 0
-// b -1
-
-//AND:
+// Target for AND, uncomment the following line to train for this problem.
 // var target = [1, -1, -1, -1];
-//OR:
-// var target = [1, 1, 1, -1];
-// var inputs = [
-//     [1, 1],
-//     [1, 0],
-//     [0, 1],
-//     [0, 0]
-// ];
 
-//Ex 2.3:
-var target = [1, -1, -1, -1];
+// Target for OR, uncomment the following line to train for this problem.
+// var target = [1, 1, 1, -1];
+
 var inputs = [
-    [1, 1, 1],
-    [1, 1, 0],
-    [1, 0, 1],
-    [0, 1, 1]
+    [1, 1],
+    [1, 0],
+    [0, 1],
+    [0, 0]
 ];
+
 
 var alpha = 1;
 var bias = 0;
-var w = [0, 0, 0];
+var w = [0, 0];
 var wChange = 0;
 var epoch = 0;
 
