@@ -1,4 +1,4 @@
-var bias = 1;
+var bias = -1;
 var inputs = [
     [1, 1],
     [1, -1],
@@ -18,7 +18,7 @@ function newBias(bias, target) {
 
 function biasUpdate(bias, targets) {
     if (targets.length == 0) {
-        //console.log(bias);
+        console.log(bias);
         return bias;
     } else {
         let nBias = bias + targets[0];
@@ -32,7 +32,7 @@ function newWeight(wOld, input, target) {
 
 function weightsUpdate(input, targets, weights) {
     if (input.length == 0) {
-        //console.log(weights);
+        console.log(weights);
         return weights;
 
     } else {
@@ -61,32 +61,51 @@ function f_net(net) {
         return -1
     }
 }
-// console.log('Pesos após o treinamento:');
-// weightsUpdate(inputs, target, [0,0]);
-// console.log('Bias:');
-// biasUpdate(1, target);
-// console.log('Network Result:');
 
-// for (var n = 0; n < inputs.length; n++) {
-//     console.log(f_net(-1 + inputs[n].reduce(function (r, a, i) {
-//         return r + a * weights[i]
-//     }, 0)));
-// }
+// var bias = 1;
+// var inputs = [
+//     [1, 1],
+//     [1, -1],
+//     [-1, 1],
+//     [-1, -1]
+// ];
+// var target = [1, -1, -1, -1];
+// var weights = [2, 2];
 
-var x = [
-    [1, -1, -1, -1, 1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, 1, -1, 1, -1,
-        1, -1, -1, -1, 1
-    ]
+console.log('Pesos após o treinamento:');
+weightsUpdate(inputs, target, [0, 0]);
+console.log('Bias:');
+biasUpdate(1, target);
+console.log('Network Result:');
+
+for (var n = 0; n < inputs.length; n++) {
+    console.log(f_net(-1 + inputs[n].reduce(function (r, a, i) {
+        return r + a * weights[i]
+    }, 0)));
+}
+
+var b = 0;
+var xi = [
+    [1, -1, -1, -1, 1],
+    [-1, 1, -1, 1, -1],
+    [-1, -1, 1, -1, -1],
+    [-1, 1, -1, 1, -1],
+    [1, -1, -1, -1, 1]
 ];
 
 var t = [1];
+var w = [0];
 
-b = biasUpdate(1, t);
-w = weightsUpdate(x, t, [0]);
-console.log(w);
+w = weightsUpdate(xi, t, [0]);
+console.log('Peso: ' + w);
 
-for (var n = 0; n < x.length; n++) {
-    console.log(f_net(b + x.reduce(function (r, a, i) {
-        return r + a * w
+b = biasUpdate(0, t);
+console.log('Bias: ' + b);
+
+
+console.log('------------');
+for (var n = 0; n < xi.length; n++) {
+    console.log(f_net(b + xi[n].reduce(function (r, a, i) {
+        return r + a * w[i]
     }, 0)));
 }

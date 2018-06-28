@@ -13,9 +13,11 @@
     <script>
         var pesos = [];
         var b = 0;
+
         function string2array(str) {
             return str.split(',').map(Number);
         }
+
         function pairOfinputs(input1, input2, inputs) {
             if (input1.length == 0) {
                 return inputs;
@@ -51,7 +53,9 @@
                 $('#w1').html(newWeights[0]);
                 $('#w2').html(newWeights[1]);
                 pesos = [newWeights[0], newWeights[1]];
-            })
+                $('#resultsTrain').show(300);
+            });
+
         });
         $(document).ready(function () {
             $('#copy').click(function () {
@@ -90,6 +94,27 @@
                     }, 0));
                 }
                 $('#res').html(res.join(', '));
+                $('#resultsRun').show(300);
+            });
+        });
+        $(document).ready(function () {
+            $('#and').click(function () {
+                console.log('And');
+
+                $('#trainInp1').val('1,1,-1,-1');
+                $('#trainInp2').val('1,-1,1,-1');
+                $('#trainTarget').val('1,-1,-1,-1');
+                $('#trainBias').val('1');
+                $('#trainWeight').val('0');
+            });
+            $('#or').click(function () {
+                console.log('Or');
+
+                $('#trainInp1').val('1,1,-1,-1');
+                $('#trainInp2').val('1,-1,1,-1');
+                $('#trainTarget').val('1,1,1,-1');
+                $('#trainBias').val('1');
+                $('#trainWeight').val('0');
             });
         });
     </script>
@@ -121,16 +146,20 @@
                     <input type="number" id="trainWeight" style="width:10%">
                 </p>
                 <button type="button" id="train" class="btn btn-primary">Train</button>
+                <button type="button" id="and" class="btn btn-primary">AND</button>
+                <button type="button" id="or" class="btn btn-primary">OR</button>
                 <hr>
-                <p>W1:
-                    <span id="w1"></span>
-                </p>
-                <p>W2:
-                    <span id="w2"></span>
-                </p>
-                <p>Bias:
-                    <span id="bias"></span>
-                </p>
+                <div id='resultsTrain' style="display: none">
+                    <p>W1:
+                        <span id="w1"></span>
+                    </p>
+                    <p>W2:
+                        <span id="w2"></span>
+                    </p>
+                    <p>Bias:
+                        <span id="bias"></span>
+                    </p>
+                </div>
             </div>
             <div class="col">
                 <h3>Neural Network</h3>
@@ -153,9 +182,11 @@
 
                 <button type="button" id="net" class="btn btn-primary">Run</button>
                 <hr>
-                <p>Result:
-                    <span id="res"></span>
-                </p>
+                <div id="resultsRun" style="display: none">
+                    <p>Result:
+                        <span id="res"></span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

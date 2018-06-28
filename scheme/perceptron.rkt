@@ -1,12 +1,15 @@
 #lang racket
 ;;Perceptron
 
-(define *alpha* 0.09230213122301982308912380912083918092308912380921089)
+;;(define *alpha* 0.09230213122301982308912380912083918092308912380921089)
+(define *alpha* 0.2)
 (define *weights* '(0 0 0 0))
+;;(define *weights* '(0 0))
 (define *b* 0)
 (define *theta* 0)
-;;(define *inputs* '((1 1 1 1) (-1 1 -1 -1) (1 1 1 -1) (1 -1 -1 1)))
-;;(define *target* '(1 -1 -1 -1))
+(define *inputs* '((1 1 1 1) (-1 1 -1 -1) (1 1 1 -1) (1 -1 -1 1)))
+;;(define *inputs* '((1 1 -1 -1) (1 -1 1 -1)))
+(define *target* '(1 -1 -1 -1))
 ;;1 -1 -1 -1 1
 ;;-1 1 -1 1 -1
 ;;-1 -1 1 -1 -1
