@@ -1,51 +1,105 @@
 function y_in(bias, input, weights) {
-    return (
-        bias +
-        input
-        .map(function (x, index) {
-            return x * weights[index];
-        })
-        .reduce(function (vOld, vNew) {
-            return vOld + vNew;
-        }, 0)
-    );
+  return (
+    bias +
+    input
+    .map((x, index) => {
+      return x * weights[index];
+    })
+    .reduce((vOld, vNew) => {
+      return vOld + vNew;
+    }, 0)
+  );
 }
 
 function activationFunc(y_in) {
-    let theta = 0.2;
-    if (y_in > theta) {
-        return 1;
-    }
-    if (y_in < -theta) {
-        return -1;
-    } else {
-        return 0;
-    }
+  let theta = 0.2;
+  if (y_in > theta) {
+    return 1;
+  }
+  if (y_in < -theta) {
+    return -1;
+  } else {
+    return 0;
+  }
 }
 
 function weightUptade(weights, alpha, target, inputs) {
-    var w = [];
-    w = weights.map(function (wi, index) {
-        return wi + alpha * target * inputs[index];
-    });
-    return w;
+  var w = [];
+  w = weights.map((wi, index) => {
+    return wi + alpha * target * inputs[index];
+  });
+  return w;
 }
 
 function biasUpdate(bias, alpha, target) {
-    return bias + alpha * target;
+  return bias + alpha * target;
+}
+
+function train(input, bias, weights, target, alpha) {
+  let weightChange = 0;
+  let trainEpoch = 0;
+
+  while (weightChange != input.length) {
+    for (var i = 0; i < input.length; i++) {
+      // console.log(`--------------- Input ${i} -------------`);
+      let netInput = y_in(bias, input[i], weights);
+      let output = activationFunc(netInput);
+      if (output != target[i]) {
+        // console.log(`Net Input: ${netInput}`);
+        // console.log(`Output: ${output}`);
+        // console.log(`Target: ${target[i]}`);
+        weights = weightUptade(weights, alpha, target[i], input[i]);
+        bias = biasUpdate(bias, alpha, target[i]);
+        // console.log(`Pesos: [${weights}]`);
+        // console.log(`Bias: ${bias}`);
+        weightChange = 0;
+      } else {
+        weightChange = weightChange + 1;
+        // console.log('Não houve alterações nos pesos.');
+      }
+    }
+    if (weightChange != input.length) {
+      weightChange = 0;
+    }
+    trainEpoch++;
+  }
+  return {
+    'weights': weights,
+    'bias': bias,
+    'epochs': trainEpoch
+  }
 }
 
 function neuron(inputs, weights, bias) {
-    inputs.forEach(pair => {
-        console.log('Input Pair: [' + pair + '] - \nOutput: ' + activationFunc(y_in(bias, pair, weights)));
-    });
+  inputs.forEach(pair => {
+    // console.log('Input Pair: [' + pair + '] - \nOutput: ' + activationFunc(y_in(bias, pair, weights)));
+    console.log(`Output: ${activationFunc(y_in(bias, pair, weights))}`);
+  });
 }
 
+function randomWeights(n) {
+  let weights = new Array();
+  for (var i = 0; i < n; i++) {
+    weights[i] = Math.random();
+  }
+  return weights;
+}
+
+var alpha = 0.4;
+
+var bias = 0;
+
+// Weight change counter.
+var wChange = 0;
+
+// Training epochs counter.
+var epoch = 0;
+
 // Target for AND, uncomment the following line to train for this problem.
-// var target = [1, -1, -1, -1];
+var targetAnd = [1, -1, -1, -1];
 
 // Target for OR, uncomment the following line to train for this problem.
-// var target = [1, 1, 1, -1];
+var targetOr = [1, 1, 1, -1];
 
 // var target = [-1, 1, 1, 1, 1, 1, 1, 1];
 
@@ -56,202 +110,111 @@ function neuron(inputs, weights, bias) {
 //     [0, 0]
 // ];
 
-// var inputs = [
-//     [0, 0, 0],
-//     [0, 0, 1],
-//     [0, 1, 0],
-//     [0, 1, 1],
-//     [1, 0, 0],
-//     [1, 0, 1],
-//     [1, 1, 0],
-//     [1, 1, 1]
-// ];
-
-// Learning rate is set to 1.
-var alpha = 0.4;
-
-// Bias is initialized with 0.
-var bias = 0;
-
 // Weights are initialized with 0.
 // If the input has N element, you must initilize N weights.
 // var w = [0, 0, 0];
 
-// Weight change counter.
-var wChange = 0;
-
-// Training epochs counter.
-var epoch = 0;
-
-// while (wChange != inputs.length) {
-//     for (var i = 0; i < inputs.length; i++) {
-//         console.log('-----------------' + i);
-//         if (activationFunc(y_in(bias, inputs[i], w)) != target[i]) {
-//             console.log('Net: ' + y_in(bias, inputs[i], w));
-//             console.log('Out:' + activationFunc(y_in(bias, inputs[i], w)));
-//             console.log('Target: ' + target[i]);
-//             w = weightUptade(w, alpha, target[i], inputs[i]);
-//             bias = biasUpdate(bias, alpha, target[i]);
-//             console.log('Pesos: [' + w + ']');
-//             console.log('Bias: ' + bias);
-//             wChange = 0;
-//         } else {
-//             wChange = wChange + 1;
-//             console.log('Não atualizou o peso.');
-//         }
-//     }
-//     if (wChange != inputs.length) {
-//         wChange = 0;
-//     }
-//     epoch++;
-// }
-
-// console.log('-------FIM-------');
-
-// console.log('Pesos ao final do treinamento: [' + w + ']');
-// console.log('Bias ao final fo treinamento:  ' + bias);
-// //console.log(wChange);
-// console.log('Épocas de treinamento: ' + epoch);
-
-
-// console.log('========================================');
-
-// neuron(inputs, w, bias);
-
-
 var inputsPair = [
-    [
-        0, 0, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0,
-        0, 0, 1, 0, 1, 0, 0,
-        0, 0, 1, 0, 1, 0, 0,
-        0, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 0,
-        1, 1, 1, 0, 1, 1, 1
-    ],
-    [
-        1, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1,
-        0, 1, 0, 0, 0, 0, 1,
-        0, 1, 0, 0, 0, 0, 1,
-        0, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 0, 1,
-        0, 1, 0, 0, 0, 0, 1,
-        0, 1, 0, 0, 0, 0, 1,
-        1, 1, 1, 1, 1, 1, 0
-    ]
+  [
+    0, 0, 1, 1, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 1, 0, 0,
+    0, 0, 1, 0, 1, 0, 0,
+    0, 1, 1, 1, 1, 1, 0,
+    0, 1, 0, 0, 0, 1, 0,
+    0, 1, 0, 0, 0, 1, 0,
+    1, 1, 1, 0, 1, 1, 1
+  ],
+  [
+    1, 1, 1, 1, 1, 1, 0,
+    0, 1, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1,
+    0, 1, 1, 1, 1, 1, 0,
+    0, 1, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 0
+  ]
 ];
 
 var font2 = [
-    [
-        0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0,
-        0, 0, 1, 0, 1, 0, 0,
-        0, 0, 1, 0, 1, 0, 0,
-        0, 1, 0, 0, 0, 1, 0,
-        0, 1, 1, 1, 1, 1, 0,
-        0, 1, 0, 0, 0, 1, 0,
-        0, 1, 0, 0, 0, 1, 0
-    ],
-    [
-        1, 1, 1, 1, 1, 1, 0,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 1, 1, 1, 1, 1, 0,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 0, 0, 0, 0, 0, 1,
-        1, 1, 1, 1, 1, 1, 0
-    ]
+  [
+    0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0,
+    0, 0, 1, 0, 1, 0, 0,
+    0, 0, 1, 0, 1, 0, 0,
+    0, 1, 0, 0, 0, 1, 0,
+    0, 1, 1, 1, 1, 1, 0,
+    0, 1, 0, 0, 0, 1, 0,
+    0, 1, 0, 0, 0, 1, 0
+  ],
+  [
+    1, 1, 1, 1, 1, 1, 0,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 0,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 0
+  ]
 ];
 
 var targetChar = [1, -1];
 
-var wChar = [0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0
+var wChar = [
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0,
+  0, 0, 0
 ];
 
-while (wChange != font2.length) {
-    for (var i = 0; i < font2.length; i++) {
-        console.log('-----------------' + i);
-        if (activationFunc(y_in(bias, font2[i], wChar)) != targetChar[i]) {
+var wrongA = [
+  0, 0, 0, 1, 0, 0, 1,
+  0, 0, 0, 1, 0, 0, 0,
+  0, 0, 1, 1, 1, 0, 0,
+  1, 0, 1, 0, 1, 0, 1,
+  0, 0, 1, 0, 1, 0, 0,
+  0, 1, 1, 1, 1, 1, 1,
+  0, 1, 0, 0, 0, 1, 0,
+  1, 1, 0, 1, 0, 1, 0,
+  1, 1, 0, 0, 0, 1, 1
+];
 
-            console.log('Net: ' + y_in(bias, font2[i], wChar));
-            console.log('Out:' + activationFunc(y_in(bias, font2[i], wChar)));
-            console.log('Target: ' + targetChar[i]);
+var wrongB = [
+  1, 1, 1, 1, 1, 1, 0,
+  1, 0, 0, 0, 0, 0, 1,
+  1, 1, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 0,
+  1, 1, 1, 1, 1, 1, 1,
+  1, 1, 0, 0, 0, 0, 0,
+  1, 0, 0, 0, 0, 0, 1,
+  1, 0, 0, 0, 0, 0, 1,
+  1, 1, 1, 1, 1, 1, 0
+];
 
-            wChar = weightUptade(wChar, alpha, targetChar[i], font2[i]);
-            bias = biasUpdate(bias, alpha, targetChar[i]);
+var randomWeights = randomWeights(inputsPair[0].length);
+var randBias = Math.random();
+x = train(font2, randBias, randomWeights, targetChar, 0.09);
+console.log(`Epocas: ${x.epochs}`);
+y = train(inputsPair, x.bias, x.weights, targetChar, 0.09);
+// console.log(y.weights);
+console.log(`Epocas: ${y.epochs}`);
 
-            console.log('Pesos: [' + wChar + ']');
-            console.log('Bias: ' + bias);
-
-            wChange = 0;
-        } else {
-            wChange = wChange + 1;
-            console.log('Não atualizou o peso.');
-        }
-    }
-    if (wChange != font2.length) {
-        wChange = 0;
-    }
-    epoch++;
+// neuron([inputsPair[1]], y.weights, y.bias); // B
+for (var i = 0; i < inputsPair.length; i++) {
+  neuron([inputsPair[i]], y.weights, y.bias);
 }
-
-console.log('-------FIM-------');
-
-console.log('Pesos ao final do treinamento: [' + wChar + ']');
-console.log('Bias ao final fo treinamento:  ' + bias);
-console.log('Épocas de treinamento: ' + epoch);
-
-console.log('\n\nTreinamento para a segunda fonte');
-
-
-while (wChange != inputsPair.length) {
-    for (var i = 0; i < inputsPair.length; i++) {
-        console.log('-----------------' + i);
-        if (activationFunc(y_in(bias, inputsPair[i], wChar)) != targetChar[i]) {
-
-            console.log('Net: ' + y_in(bias, inputsPair[i], wChar));
-            console.log('Out:' + activationFunc(y_in(bias, inputsPair[i], wChar)));
-            console.log('Target: ' + target[i]);
-
-            wChar = weightUptade(wChar, alpha, targetChar[i], inputsPair[i]);
-            bias = biasUpdate(bias, alpha, targetChar[i]);
-
-            console.log('Pesos: [' + wChar + ']');
-            console.log('Bias: ' + bias);
-
-            wChange = 0;
-        } else {
-            wChange = wChange + 1;
-            console.log('Não atualizou o peso.');
-        }
-    }
-    if (wChange != inputsPair.length) {
-        wChange = 0;
-    }
-    epoch++;
-}
-
-console.log('-------FIM-------');
-
-console.log('Pesos ao final do treinamento: [' + wChar + ']');
-console.log('Bias ao final fo treinamento:  ' + bias);
-console.log('Épocas de treinamento: ' + epoch);
-
-neuron([inputsPair[0]], wChar, bias);
-neuron([font2[1]], wChar, bias);
+// neuron([font2[0]], y.weights, y.bias); // A
+neuron([wrongB], y.weights, y.bias); // A
